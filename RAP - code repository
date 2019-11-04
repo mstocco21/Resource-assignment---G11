@@ -1,3 +1,43 @@
 ##This repository will act as the file for the weekly assignment #5
 # = code, ## = comment
 
+# gdown.pl https://drive.google.com/file/d/1zCEX-0_fHtU_o6xp6vHsCN4nxC8MWAwi/edit G11_R1.fastq.gz
+# gdown.pl https://drive.google.com/file/d/1BjyD1JYrCOpFFhN1YAx6tAsjM0Y6vXuf/edit G11_R2.fastq.gz
+## Downloads Dataset from file sharing site google drive
+
+# fastqc G11_R1.fastq.gz
+# fastqc G11_R2.fastq.gz
+## Performs quality control on the files and dowloads the QC report as an html file
+
+#cutadapt -q 20,20 -a CTGTCTCTTATACACATCTCCGAGCCCACGAGAC -A CTGTCTCTTATACACATCTGACGCTGCCGACGA -m 50 --max-n 0 -o G11_R1.cutadapt.fastq -p G11_R2.cutadapt.fastq G11_R1.fastq.gz G11_R2.fastq.gz
+## Performs quality trimming on both the G11_R1 and G11_R2 fastq files and creates the trimmed files in new .cutadapt.fastq files
+
+# fastqc G11_R1.cutadapt.fastq
+# fastqc G11_R2.cutadapt.fastq
+## performs quality control on the new trimmed files to assure quality trimming
+
+# cp G11_R1_cutadapt.fastq de_novo_assemblyRP/
+# cp G11_R1_cutadapt.fastq de_novo_assemblyRP/
+## This command moves the cutadapt files from the previous folder into a new de_novo_assemblyRP folder directly to make room for the next
+## stage of the project.
+
+# conda activate de_novo
+## activates the Spade assembly tool, this will be the assembler uses as it provides de Bruijn graph processing and contig refinement at the 
+## end of the process for better reads
+
+# spades.py -k 21,51,71,91,111,127 --careful --pe1-1 G11_R1.cutadapt.fastq --pe1-2 G11_R2.cutadapt.fastq -o G11_spades_output
+## Uses spade.py to create a new assembly from the cutadapt files from scratch and puts them into a fdirectory marked "G11_spades_output"
+##
+
+# cd G11_spades_output
+# quast contigs.fasta -o Quast_contigs
+## changes directory to the output and uses the quast genome assesment tool to store a quality report in the directory Quast_contigs
+## winSCP was used to bring up the .html document so we could assess the quality ourselves.
+
+# cp de_novo/G11_spades_output/contigs.fasta prokka_annotation
+## This command moves the cutadapt files from the previous folder into a new prokka_annotation folder directly to make room for the next
+## stage of the project.
+
+# awk '/^>/{print ">G11_" ++i; next}{print}' < contigs.fasta > contigs_names.fasta
+# prokka --outdir G11 --prefix G11 contigs_names.fasta
+## Use a unix filter known as awk to prepare the data for processing with prokka and then rns the prokka pipeline for annotation
