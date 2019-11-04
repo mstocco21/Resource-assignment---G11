@@ -1,5 +1,7 @@
 # Resource-assignment---G11
 # Repository for the resource assignment project
+# Data pulled from https://drive.google.com/drive/u/0/folders/1QCLWxp2yEifANjFKIhOxlKKCUsH1Tas7
+# This student performed analyses on the G11 data folders, both R1 & R2
 
 # Strain Name: Pseudoalteromonas sp. Angola-27
 
